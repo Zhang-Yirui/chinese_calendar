@@ -54,54 +54,54 @@ void printChineseCalendarInfo(ChineseCalendarInfo info) {
     }
 
     printf("Time - Hour: %d, Minute: %d, Second: %d\n",
-           info.calendar.time.hour,
-           info.calendar.time.minute,
-           info.calendar.time.second);
+           info.calendar.calendar.time.hour,
+           info.calendar.calendar.time.minute,
+           info.calendar.calendar.time.second);
 
     printf("Solar - Year: %d, Month: %d, Day: %d, Week: %d, Days of Month: %d, Day of Year: %d, Days of Year: %d\n",
-           info.calendar.solar.year,
-           info.calendar.solar.month,
-           info.calendar.solar.day,
-           info.calendar.solar.week,
-           info.calendar.solar.daysOfMonth,
-           info.calendar.solar.dayOfYear,
-           info.calendar.solar.daysOfYear);
+           info.calendar.calendar.solar.year,
+           info.calendar.calendar.solar.month,
+           info.calendar.calendar.solar.day,
+           info.calendar.calendar.solar.week,
+           info.calendar.calendar.solar.daysOfMonth,
+           info.calendar.calendar.solar.dayOfYear,
+           info.calendar.calendar.solar.daysOfYear);
 
     printf("Lunar - Year: %d, Month: %d, Day: %d, Celestial Stem: %d, Terrestrial Branch: %d, Chinese Zodiac: %d\n",
-           info.calendar.lunar.chineseCalendarYear,
-           info.calendar.lunar.chineseCalendarMonth,
-           info.calendar.lunar.chineseCalendarDay,
-           info.calendar.lunar.celestialStem,
-           info.calendar.lunar.terrestrialBranch,
-           info.calendar.lunar.chineseZodiac);
+           info.calendar.calendar.lunar.chineseCalendarYear,
+           info.calendar.calendar.lunar.chineseCalendarMonth,
+           info.calendar.calendar.lunar.chineseCalendarDay,
+           info.calendar.calendar.lunar.celestialStem,
+           info.calendar.calendar.lunar.terrestrialBranch,
+           info.calendar.calendar.lunar.chineseZodiac);
     printf("Is Lunar Leap Month: %s, Is DXYue: %s\n",
-           info.calendar.lunar.isChineseCalendarLeapMonth ? "Yes" : "No",
-           info.calendar.lunar.isDXYue ? "Yes" : "No");
+           info.calendar.calendar.lunar.isChineseCalendarLeapMonth ? "Yes" : "No",
+           info.calendar.calendar.lunar.isDXYue ? "Yes" : "No");
 
     printf("Solar Terms - Current: %d, Next: %d, Next Remain Days: %d, Is Today: %s\n",
-           info.calendar.solarTerms.solarTerm,
-           info.calendar.solarTerms.nextSolarTerm,
-           info.calendar.solarTerms.nextSolarTermRemainDays,
-           info.calendar.solarTerms.isToday ? "Yes" : "No");
+           info.calendar.calendar.solarTerms.solarTerm,
+           info.calendar.calendar.solarTerms.nextSolarTerm,
+           info.calendar.calendar.solarTerms.nextSolarTermRemainDays,
+           info.calendar.calendar.solarTerms.isToday ? "Yes" : "No");
 
     printf("Four Pillars - Year: %d-%d, Month: %d-%d, Day: %d-%d, Hour: %d-%d\n",
-           info.calendar.fourPillars.year.celestialStem, info.calendar.fourPillars.year.terrestrialBranch,
-           info.calendar.fourPillars.month.celestialStem, info.calendar.fourPillars.month.terrestrialBranch,
-           info.calendar.fourPillars.day.celestialStem, info.calendar.fourPillars.day.terrestrialBranch,
-           info.calendar.fourPillars.hour.celestialStem, info.calendar.fourPillars.hour.terrestrialBranch);
+           info.calendar.calendar.fourPillars.year.celestialStem, info.calendar.calendar.fourPillars.year.terrestrialBranch,
+           info.calendar.calendar.fourPillars.month.celestialStem, info.calendar.calendar.fourPillars.month.terrestrialBranch,
+           info.calendar.calendar.fourPillars.day.celestialStem, info.calendar.calendar.fourPillars.day.terrestrialBranch,
+           info.calendar.calendar.fourPillars.hour.celestialStem, info.calendar.calendar.fourPillars.hour.terrestrialBranch);
     print_separator(100, '-', '\n');
     if (info.code == SUCCESS) {
-        printf("%s%s\n", celestial_stem[info.calendar.lunar.celestialStem - 1],
-               terrestrial_branch[info.calendar.lunar.chineseZodiac - 1]);
+        printf("%s%s\n", celestial_stem[info.calendar.calendar.lunar.celestialStem - 1],
+               terrestrial_branch[info.calendar.calendar.lunar.chineseZodiac - 1]);
         printf("Four Pillars - Year: %s%s, Month: %s%s, Day: %s%s, Hour: %s%s\n",
-               celestial_stem[info.calendar.fourPillars.year.celestialStem - 1],
-               terrestrial_branch[info.calendar.fourPillars.year.terrestrialBranch - 1],
-               celestial_stem[info.calendar.fourPillars.month.celestialStem - 1],
-               terrestrial_branch[info.calendar.fourPillars.month.terrestrialBranch - 1],
-               celestial_stem[info.calendar.fourPillars.day.celestialStem - 1],
-               terrestrial_branch[info.calendar.fourPillars.day.terrestrialBranch - 1],
-               celestial_stem[info.calendar.fourPillars.hour.celestialStem - 1],
-               terrestrial_branch[info.calendar.fourPillars.hour.terrestrialBranch - 1]);
+               celestial_stem[info.calendar.calendar.fourPillars.year.celestialStem - 1],
+               terrestrial_branch[info.calendar.calendar.fourPillars.year.terrestrialBranch - 1],
+               celestial_stem[info.calendar.calendar.fourPillars.month.celestialStem - 1],
+               terrestrial_branch[info.calendar.calendar.fourPillars.month.terrestrialBranch - 1],
+               celestial_stem[info.calendar.calendar.fourPillars.day.celestialStem - 1],
+               terrestrial_branch[info.calendar.calendar.fourPillars.day.terrestrialBranch - 1],
+               celestial_stem[info.calendar.calendar.fourPillars.hour.celestialStem - 1],
+               terrestrial_branch[info.calendar.calendar.fourPillars.hour.terrestrialBranch - 1]);
     }
 
     print_separator(100, '-', '\n');
@@ -187,7 +187,107 @@ void processing_parameter(Arguments *arguments) {
         }
 
 }
+#if defined(USE_UNION) && USE_UNION == 1
+void get_calendar_info_str(ChineseCalendarInfo info) {
+//    ChineseCalendarInfo info = get_calendar_info(year, month, day, hour, minute, second);
+    printf("%d %d %d %d %d %d %d %d %d %d %s %s %d %d %d %d %d %d %s %d %d %d %d %d %d %d %d",
+           info.calendar.calendar.solar.year,
+           info.calendar.calendar.solar.month,
+           info.calendar.calendar.solar.day,
 
+           info.calendar.calendar.time.hour,
+           info.calendar.calendar.time.minute,
+           info.calendar.calendar.time.second,
+           info.calendar.calendar.solar.week,
+
+           info.calendar.calendar.lunar.chineseCalendarYear,
+           info.calendar.calendar.lunar.chineseCalendarMonth,
+           info.calendar.calendar.lunar.chineseCalendarDay,
+           info.calendar.calendar.lunar.isChineseCalendarLeapMonth ? "true" : "false",
+           info.calendar.calendar.lunar.isDXYue ? "true" : "false",
+
+           info.calendar.calendar.lunar.celestialStem,
+           info.calendar.calendar.lunar.terrestrialBranch,
+           info.calendar.calendar.lunar.chineseZodiac,
+
+           info.calendar.calendar.solarTerms.solarTerm,
+           info.calendar.calendar.solarTerms.nextSolarTerm,
+           info.calendar.calendar.solarTerms.nextSolarTermRemainDays,
+           info.calendar.calendar.solarTerms.isToday ? "true" : "false",
+
+           info.calendar.calendar.fourPillars.year.celestialStem, info.calendar.calendar.fourPillars.year.terrestrialBranch,
+           info.calendar.calendar.fourPillars.month.celestialStem, info.calendar.calendar.fourPillars.month.terrestrialBranch,
+           info.calendar.calendar.fourPillars.day.celestialStem, info.calendar.calendar.fourPillars.day.terrestrialBranch,
+           info.calendar.calendar.fourPillars.hour.celestialStem, info.calendar.calendar.fourPillars.hour.terrestrialBranch
+    );
+}
+
+void get_calendar_info_json(ChineseCalendarInfo info) {
+    cJSON *json = cJSON_CreateObject();
+    cJSON_AddNumberToObject(json, "code", info.code);
+    cJSON_AddStringToObject(json, "hash", info.hash);
+    if (info.code != SUCCESS) {
+        cJSON_AddNullToObject(json, "calendar");
+    } else {
+        cJSON *calendar = cJSON_AddObjectToObject(json, "calendar");
+        cJSON *calendar_time = cJSON_AddObjectToObject(calendar, "time");
+        cJSON *calendar_solar = cJSON_AddObjectToObject(calendar, "solar");
+        cJSON *calendar_lunar = cJSON_AddObjectToObject(calendar, "lunar");
+        cJSON *calendar_solar_terms = cJSON_AddObjectToObject(calendar, "solarTerms");
+        cJSON *calendar_four_pillars = cJSON_AddObjectToObject(calendar, "fourPillars");
+        cJSON *calendar_four_pillars_year = cJSON_AddObjectToObject(calendar_four_pillars, "year");
+        cJSON *calendar_four_pillars_month = cJSON_AddObjectToObject(calendar_four_pillars, "month");
+        cJSON *calendar_four_pillars_day = cJSON_AddObjectToObject(calendar_four_pillars, "day");
+        cJSON *calendar_four_pillars_hour = cJSON_AddObjectToObject(calendar_four_pillars, "hour");
+        cJSON_AddNumberToObject(calendar_time, "hour", info.calendar.calendar.time.hour);
+        cJSON_AddNumberToObject(calendar_time, "minute", info.calendar.calendar.time.minute);
+        cJSON_AddNumberToObject(calendar_time, "second", info.calendar.calendar.time.second);
+        cJSON_AddNumberToObject(calendar_solar, "year", info.calendar.calendar.solar.year);
+        cJSON_AddNumberToObject(calendar_solar, "month", info.calendar.calendar.solar.month);
+        cJSON_AddNumberToObject(calendar_solar, "day", info.calendar.calendar.solar.day);
+        cJSON_AddNumberToObject(calendar_solar, "week", info.calendar.calendar.solar.week);
+        cJSON_AddNumberToObject(calendar_solar, "dayOfYear", info.calendar.calendar.solar.dayOfYear);
+        cJSON_AddNumberToObject(calendar_solar, "daysOfMonth", info.calendar.calendar.solar.daysOfMonth);
+        cJSON_AddNumberToObject(calendar_solar, "daysOfYear", info.calendar.calendar.solar.daysOfYear);
+        cJSON_AddNumberToObject(calendar_lunar, "chineseCalendarYear", info.calendar.calendar.lunar.chineseCalendarYear);
+        cJSON_AddNumberToObject(calendar_lunar, "chineseCalendarMonth", info.calendar.calendar.lunar.chineseCalendarMonth);
+        cJSON_AddNumberToObject(calendar_lunar, "chineseCalendarDay", info.calendar.calendar.lunar.chineseCalendarDay);
+        cJSON_AddNumberToObject(calendar_lunar, "celestialStem", info.calendar.calendar.lunar.celestialStem);
+        cJSON_AddNumberToObject(calendar_lunar, "terrestrialBranch", info.calendar.calendar.lunar.terrestrialBranch);
+        cJSON_AddNumberToObject(calendar_lunar, "chineseZodiac", info.calendar.calendar.lunar.chineseZodiac);
+        cJSON_AddBoolToObject(calendar_lunar, "isChineseCalendarLeapMonth",
+                              info.calendar.calendar.lunar.isChineseCalendarLeapMonth);
+        cJSON_AddBoolToObject(calendar_lunar, "isDXYue", info.calendar.calendar.lunar.isDXYue);
+        cJSON_AddNumberToObject(calendar_solar_terms, "solarTerm", info.calendar.calendar.solarTerms.solarTerm);
+        cJSON_AddNumberToObject(calendar_solar_terms, "nextSolarTerm", info.calendar.calendar.solarTerms.nextSolarTerm);
+        cJSON_AddNumberToObject(calendar_solar_terms, "nextSolarTermRemainDays",
+                                info.calendar.calendar.solarTerms.nextSolarTermRemainDays);
+        cJSON_AddBoolToObject(calendar_solar_terms, "isToday", info.calendar.calendar.solarTerms.isToday);
+        cJSON_AddNumberToObject(calendar_four_pillars_year, "celestialStem",
+                                info.calendar.calendar.fourPillars.year.celestialStem);
+        cJSON_AddNumberToObject(calendar_four_pillars_year, "terrestrialBranch",
+                                info.calendar.calendar.fourPillars.year.terrestrialBranch);
+        cJSON_AddNumberToObject(calendar_four_pillars_month, "celestialStem",
+                                info.calendar.calendar.fourPillars.month.celestialStem);
+        cJSON_AddNumberToObject(calendar_four_pillars_month, "terrestrialBranch",
+                                info.calendar.calendar.fourPillars.month.terrestrialBranch);
+        cJSON_AddNumberToObject(calendar_four_pillars_day, "celestialStem",
+                                info.calendar.calendar.fourPillars.day.celestialStem);
+        cJSON_AddNumberToObject(calendar_four_pillars_day, "terrestrialBranch",
+                                info.calendar.calendar.fourPillars.day.terrestrialBranch);
+        cJSON_AddNumberToObject(calendar_four_pillars_hour, "celestialStem",
+                                info.calendar.calendar.fourPillars.hour.celestialStem);
+        cJSON_AddNumberToObject(calendar_four_pillars_hour, "terrestrialBranch",
+                                info.calendar.calendar.fourPillars.hour.terrestrialBranch);
+    }
+    char *json_str = cJSON_Print(json);
+    size_t len = strlen(json_str);
+    print_json(json_str, len);
+    cJSON_Delete(json); // 清理分配的内存
+}
+#endif
+
+#if defined(USE_STRUCT) && USE_STRUCT == 1
 void get_calendar_info_str(ChineseCalendarInfo info) {
 //    ChineseCalendarInfo info = get_calendar_info(year, month, day, hour, minute, second);
     printf("%d %d %d %d %d %d %d %d %d %d %s %s %d %d %d %d %d %d %s %d %d %d %d %d %d %d %d",
@@ -285,6 +385,8 @@ void get_calendar_info_json(ChineseCalendarInfo info) {
     print_json(json_str, len);
     cJSON_Delete(json); // 清理分配的内存
 }
+#endif
+
 
 void print_json(const char *json_str, size_t len) {
     char *result = (char *) malloc(sizeof(char) * len);
