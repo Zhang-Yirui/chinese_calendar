@@ -90,9 +90,7 @@ jobs:
           path: artifacts
 
       - name: Generate tag
-        run: |
-          TAG=""
-          echo "TAG=V$(date +'%Y%m%d')" >> $GITHUB_ENV
+        run: echo "TAG=V$(date +'%Y%m%d')" >> $GITHUB_ENV
         shell: bash
       - name: Create GitHub release
         uses: ncipollo/release-action@v1
