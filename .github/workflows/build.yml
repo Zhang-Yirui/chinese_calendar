@@ -1,0 +1,115 @@
+name: Build with CMake and Ninja on Multiple Platforms
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions: write-all
+
+jobs:
+  Compile-and-generate-executable-files:
+    name: Compile and generate executable files
+    runs-on: ${{ matrix.os }}
+    env:
+      TZ: Asia/Shanghai
+
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        include:
+          - os: ubuntu-latest
+            cc: gcc
+            cxx: g++
+            artifact_name: calendar_linux
+          - os: windows-latest
+            cc: gcc
+            cxx: g++
+            artifact_name: calendar_windows.exe
+          - os: macos-latest
+            cc: gcc-14
+            cxx: g++-14
+            artifact_name: calendar_macos
+
+    steps:
+      - name: Get files from repository
+        uses: actions/checkout@v4
+      
+      - name: Install dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake gcc g++ ninja-build
+          echo "linux" > ${{ github.workspace }}/sys.txt
+          
+  
+      - name: Install dependencies (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          $url = "https://github.com/Zhang-Yirui/mingw64/releases/download/mingw64/mingw64.zip"
+          Invoke-WebRequest -Uri $url -OutFile "mingw64.zip"
+          Expand-Archive -Path mingw64.zip -DestinationPath C:\mingw64 -Force
+          echo "C:\mingw64\bin" >> $env:GITHUB_PATH
+          echo "windows" > sys.txt
+  
+      - name: Install dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew update
+          brew install gcc cmake ninja --formula
+          echo "macos" > sys.txt
+  
+      - name: Configure CMake with Ninja
+        run: |
+          mkdir -p build
+          cd build
+          echo "on $(cat ${{ github.workspace }}/sys.txt) gcc version: $(${{ matrix.cc }} --version)"
+          cmake .. -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=${{ matrix.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}
+  
+      - name: Build project
+        run: |
+          cd build
+          ninja
+          ./${{ matrix.artifact_name }} -j
+      
+      - name: Upload artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts-${{ matrix.os }}
+          path: build/${{ matrix.artifact_name }}
+
+  Upload-artifacts-to-release:
+    name: Upload artifacts to release
+    needs: Compile-and-generate-executable-files
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Generate tag
+        run: |
+          TAG=""
+          echo "TAG=V$(date +'%Y%m%d')" >> $GITHUB_ENV
+        shell: bash
+      - name: Create GitHub release
+        uses: ncipollo/release-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          artifacts: "artifacts/build-artifacts-macos-latest/calendar_macos,artifacts/build-artifacts-ubuntu-latest/calendar_linux,artifacts/build-artifacts-windows-latest/calendar_windows.exe"
+          tag: ${{ env.TAG }}
+          body: "This is the first release of config files."
+          draft: false
+          prerelease: false
+          removeArtifacts: true
+
+      - name: Delete the artifacts
+        uses: geekyeggo/delete-artifact@v5
+        with:
+          name: |
+            build-artifacts-macos-latest
+            build-artifacts-ubuntu-latest
+            build-artifacts-windows-latest
