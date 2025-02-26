@@ -1,8 +1,11 @@
 #ifndef CALENDAR_CALENDAR_H
 #define CALENDAR_CALENDAR_H
 
+#ifndef USE_UNION
 #define USE_UNION 1
+#endif
 #define USE_STRUCT (!(USE_UNION))
+
 #include "stdio.h"
 #include <stdbool.h>
 #include "hash.h"

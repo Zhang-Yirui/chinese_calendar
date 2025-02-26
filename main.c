@@ -123,8 +123,7 @@ int main(int argc, char *argv[]) {
         processing_parameter(&arguments);
     }
     // 计算农历数据
-    ChineseCalendarInfo info = get_calendar_info(arguments.datetime.year, arguments.datetime.month,
-                                                 arguments.datetime.day, arguments.datetime.hour,
+    ChineseCalendarInfo info = get_calendar_info(arguments.datetime.year, arguments.datetime.month, arguments.datetime.day, arguments.datetime.hour,
                                                  arguments.datetime.minute, arguments.datetime.second);
     if (arguments.json) {
         get_calendar_info_json(info);
@@ -176,17 +175,18 @@ int parse_part(const char *str, int start, int length) {
 }
 
 void processing_parameter(Arguments *arguments) {
-        int positions[] = {0, 4, 6, 8, 10, 12};  // 各部分的起始位置
-        int lengths[] = {4, 2, 2, 2, 2, 2};  // 各部分的长度
-        int *values[] = {&arguments->datetime.year, &arguments->datetime.month,
-                         &arguments->datetime.day, &arguments->datetime.hour,
-                         &arguments->datetime.minute, &arguments->datetime.second};
+    int positions[] = {0, 4, 6, 8, 10, 12};  // 各部分的起始位置
+    int lengths[] = {4, 2, 2, 2, 2, 2};  // 各部分的长度
+    int *values[] = {&arguments->datetime.year, &arguments->datetime.month,
+                     &arguments->datetime.day, &arguments->datetime.hour,
+                     &arguments->datetime.minute, &arguments->datetime.second};
 
-        for (int i = 0; i < 6; i++) {
-            *values[i] = parse_part(arguments->datetime_str, positions[i], lengths[i]);
-        }
+    for (int i = 0; i < 6; i++) {
+        *values[i] = parse_part(arguments->datetime_str, positions[i], lengths[i]);
+    }
 
 }
+
 #if defined(USE_UNION) && USE_UNION == 1
 void get_calendar_info_str(ChineseCalendarInfo info) {
 //    ChineseCalendarInfo info = get_calendar_info(year, month, day, hour, minute, second);
@@ -288,6 +288,7 @@ void get_calendar_info_json(ChineseCalendarInfo info) {
 #endif
 
 #if defined(USE_STRUCT) && USE_STRUCT == 1
+
 void get_calendar_info_str(ChineseCalendarInfo info) {
 //    ChineseCalendarInfo info = get_calendar_info(year, month, day, hour, minute, second);
     printf("%d %d %d %d %d %d %d %d %d %d %s %s %d %d %d %d %d %d %s %d %d %d %d %d %d %d %d",
@@ -385,6 +386,7 @@ void get_calendar_info_json(ChineseCalendarInfo info) {
     print_json(json_str, len);
     cJSON_Delete(json); // 清理分配的内存
 }
+
 #endif
 
 
