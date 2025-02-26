@@ -6,6 +6,8 @@
 #include "calendar.h"
 #include "cJSON.h"
 
+#define DEBUG 0
+
 typedef struct Arguments {
     bool json;
     FILE *output;
@@ -33,6 +35,7 @@ void print_separator(int len, char separator, char end_char) {
     printf("%c", end_char);
 }
 
+#if defined(DEBUG) && DEBUG == 1
 void printChineseCalendarInfo(ChineseCalendarInfo info) {
     char *nums[10] = {"〇", "一", "二", "三", "四", "五", "六", "七", "八", "九"};
     char *chinese_calendar_day[30] = {"初一", "初二", "初三", "初四", "初五", "初六", "初七", "初八", "初九", "初十",
@@ -80,6 +83,7 @@ void printChineseCalendarInfo(ChineseCalendarInfo info) {
     }
     print_separator(separator_num, '-', '\n');
 }
+#endif
 
 int main(int argc, char *argv[]) {
     Arguments arguments = {false, stdout, "", {0}};
@@ -98,7 +102,9 @@ int main(int argc, char *argv[]) {
     // 计算农历数据
     ChineseCalendarInfo info = get_calendar_info(arguments.datetime.year, arguments.datetime.month, arguments.datetime.day,
                                                  arguments.datetime.hour, arguments.datetime.minute, arguments.datetime.second);
+#if defined(DEBUG) && DEBUG == 1
     printChineseCalendarInfo(info);
+#endif
     if (arguments.json) {
         get_calendar_info_json(info);
     } else {
@@ -269,5 +275,3 @@ void print_json(const char *json_str, size_t len) {
     printf("%s", result);
     free(result);
 }
-
-
