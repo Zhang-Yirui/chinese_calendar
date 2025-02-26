@@ -2117,3 +2117,127 @@ const uint16_t extremeSeason[] = {
         0x525C, 0x2913, 0x4A9A, 0x2151, 0x4B1B, 0x21D1, 0x4359, 0x1A0F, 0x40D9, 0x1A8F, // 6096-6100
 };
 #endif
+
+#if defined(GENERATE_DATA) && GENERATE_DATA == 1
+
+#include <stdio.h>
+
+void generate_data() {
+    int num = end_year - start_year, counter;
+    FILE *file = nullptr;
+    file = fopen("./calendar_data.c", "w");
+    if (file == nullptr) {
+        file = stdout;
+    }
+    fprintf(file, "#include <stdint.h>\n");
+    counter = 0;
+    fprintf(file, "int const month_info[%d] = {\n0x%08X, // %d\n", num + 1, month_info[0], start_year - 1);
+    for (int i = 0; i < end_year - start_year; ++i) {
+        fprintf(file, "0x%08X, ", month_info[i + 1]);
+        if (i % 5 == 4) {
+            fprintf(file, "// %d-%d\n", i - 4 + start_year, i + start_year);
+        }
+        counter++;
+    }
+    if (counter % 5 > 0) {
+        fprintf(file, "//%d-%d\n", start_year + counter - counter % 5, start_year + counter - 1);
+    }
+    fprintf(file, "};\n");
+
+    counter = 0;
+    fprintf(file, "unsigned char const solar_terms_index[%d] = {\n", (num + 1) * 3);
+
+    fprintf(file, "0x%02X, 0x%02X, 0x%02X, // %d\n", solar_terms_index[0], solar_terms_index[1], solar_terms_index[2], start_year - 1);
+    for (int i = 0; i < num; ++i) {
+        int pos = (i + 1) * 3;
+        const unsigned char *p = solar_terms_index;
+        fprintf(file, "0x%02X, 0x%02X, 0x%02X, ", p[pos + 0], p[pos + 1], p[pos + 2]);
+        if (i % 5 == 4) {
+            fprintf(file, "// %d-%d\n", i - 4 + start_year, i + start_year);
+        }
+        counter++;
+    }
+    if (counter % 5 > 0) {
+        fprintf(file, "//%d-%d\n", start_year + counter - counter % 5, start_year + counter - 1);
+    }
+    fprintf(file, "};\n");
+
+#if defined(EXTREME_SEASON) && (EXTREME_SEASON == 1)
+    counter = 0;
+    fprintf(file, "const uint16_t extremeSeason[%d] = {\n0x%04X, // %d\n", num + 1, extremeSeason[0], start_year - 1);
+    for (int i = 0; i < num; ++i) {
+        fprintf(file, "0x%04X, ", extremeSeason[i + 1]);
+        if (i % 10 == 9) {
+            fprintf(file, "// %d-%d\n", i - 4 + start_year, i + start_year);
+        }
+    }
+    if (counter % 10 > 0) {
+        fprintf(file, "//%d-%d\n", start_year + counter - counter % 10, start_year + counter - 1);
+    }
+    fprintf(file, "};\n");
+#endif
+    if (file != nullptr && file != stdout) {
+        fclose(file);
+    }
+}
+
+//void generate_data() {
+//    int start_year = 1601, end_year = 6101, num = end_year - start_year, counter;
+//    FILE *file = nullptr;
+//    file = fopen("./calendar_data.c", "w");
+//    if (file == nullptr) {
+//        file = stdout;
+//    }
+//    fprintf(file, "#include <stdint.h>\n");
+//    counter = 0;
+//    fprintf(file, "int const month_info[%d] = {\n0x%08X, // %d\n", num + 1, month_info[0], start_year - 1);
+//    for (int i = 0; i < end_year - start_year; ++i) {
+//        fprintf(file, "0x%08X, ", month_info[i + 1]);
+//        if (i % 5 == 4) {
+//            fprintf(file, "// %d-%d\n", i - 4 + start_year, i + start_year);
+//        }
+//        counter++;
+//    }
+//    if (counter % 5 > 0) {
+//        fprintf(file, "//%d-%d\n", start_year + counter - counter % 5, start_year + counter - 1);
+//    }
+//    fprintf(file, "};\n");
+//
+//    counter = 0;
+//    fprintf(file, "unsigned char const solar_terms_index[%d] = {\n", (num + 1) * 3);
+//
+//    fprintf(file, "0x%02X, 0x%02X, 0x%02X, // %d\n", solar_terms_index[0], solar_terms_index[1], solar_terms_index[2],
+//            start_year - 1);
+//    for (int i = 0; i < num; ++i) {
+//        int pos = (i + 1) * 3;
+//        const unsigned char *p = solar_terms_index;
+//        fprintf(file, "0x%02X, 0x%02X, 0x%02X, ", p[pos + 0], p[pos + 1], p[pos + 2]);
+//        if (i % 5 == 4) {
+//            fprintf(file, "// %d-%d\n", i - 4 + start_year, i + start_year);
+//        }
+//        counter++;
+//    }
+//    if (counter % 5 > 0) {
+//        fprintf(file, "//%d-%d\n", start_year + counter - counter % 5, start_year + counter - 1);
+//    }
+//    fprintf(file, "};\n");
+//
+//
+//    counter = 0;
+//    fprintf(file, "const uint16_t extremeSeason[%d] = {\n0x%04X, // %d\n", num + 1, extremeSeason[0], start_year - 1);
+//    for (int i = 0; i < num; ++i) {
+//        fprintf(file, "0x%04X, ", extremeSeason[i + 1]);
+//        if (i % 10 == 9) {
+//            fprintf(file, "// %d-%d\n", i - 4 + start_year, i + start_year);
+//        }
+//    }
+//    if (counter % 10 > 0) {
+//        fprintf(file, "//%d-%d\n", start_year + counter - counter % 10, start_year + counter - 1);
+//    }
+//    fprintf(file, "};\n");
+//    if (file != nullptr && file != stdout) {
+//        fclose(file);
+//    }
+//}
+
+#endif

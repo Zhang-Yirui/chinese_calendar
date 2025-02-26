@@ -4,6 +4,7 @@
 #include "stdint.h"
 
 #define EXTREME_SEASON 0
+#define GENERATE_DATA 0
 
 /**
  * @brief 定义数据起始年份 (公历)
