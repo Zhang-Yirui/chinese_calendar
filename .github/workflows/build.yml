@@ -99,7 +99,6 @@ jobs:
         with:
           artifacts: "artifacts/build-artifacts-macos-latest/calendar_macos,artifacts/build-artifacts-ubuntu-latest/calendar_linux,artifacts/build-artifacts-windows-latest/calendar_windows.exe"
           tag: ${{ env.TAG }}
-          body: "This is the first release of config files."
           draft: false
           prerelease: false
           removeArtifacts: true

@@ -1,7 +1,7 @@
 #ifndef CALENDAR_CALENDAR_H
 #define CALENDAR_CALENDAR_H
 
-#define USE_UNION 0
+#define USE_UNION 1
 #define USE_STRUCT (!(USE_UNION))
 #include "stdio.h"
 #include <stdbool.h>
