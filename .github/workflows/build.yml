@@ -102,6 +102,7 @@ jobs:
           draft: false
           prerelease: false
           removeArtifacts: true
+          allowUpdates: true
 
       - name: Delete the artifacts
         uses: geekyeggo/delete-artifact@v5
